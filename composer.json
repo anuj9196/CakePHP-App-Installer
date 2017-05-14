@@ -1,5 +1,5 @@
 {
-    "name": "cakephp-app-installer/Installer",
+    "name": "cakephp-app-installer/installer",
     "description": "GUI Installer plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
