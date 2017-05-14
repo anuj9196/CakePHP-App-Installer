@@ -12,7 +12,13 @@
         "psr-4": {
             "Installer\\": "src"
         }
-    },
+    },    
+    "authors": [
+        {
+            "name": "Anuj Sharma",
+            "email": "anujsharma9196@gmail.com"
+        }
+    ],
     "autoload-dev": {
         "psr-4": {
             "Installer\\Test\\": "tests",
