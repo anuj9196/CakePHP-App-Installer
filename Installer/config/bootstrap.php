@@ -1,8 +1,9 @@
 <?php
+use Cake\Core\Configure;
 /**
  * Path constants
  */
-	define('PLUGIN_CONFIG', ROOT. 'plugins' .DS. 'Installer' .DS. 'onfig' .DS);
+	define('PLUGIN_CONFIG', ROOT. 'plugins' .DS. 'Installer' .DS. 'config' .DS);
 /**
  * Database installation variable
  * if set to TRUE, the database is installed
