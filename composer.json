@@ -1,36 +1,16 @@
 {
     "name": "cakephp-app-installer/installer",
     "description": "GUI Installer plugin for CakePHP",
-	"type": "cakephp-plugin",
-  	"keywords": ["cakephp", "cakephp3", "gui-installer", "installer", "app-installer"],
-  	"homepage": "https://github.com/anuj9196/CakePHP-App-Installer",
-  	"license": "MIT",
-  	"authors": [
-	  {
-		"name": "Anuj Sharma",
-		"email": "anujsharma9196@gmail.com"
-	  }
-	],
-	"support": {
-	  "issues": "https://github.com/anuj9196/CakePHP-App-Installer/issues",
-	  "source": "https://github.com/anuj9196/CakePHP-App-Installer"
-	},
-	"require": {
-        "cakephp/cakephp": "^3.4"
-	},
-  	"require-dev": {
-	  "phpunit/phpunit": "^5.6",
-	  "cakephp/cakephp": "~3.4",
-	},
-	"autoload": {
-	  "psr-4": {
-		"Installer\\": "src"
-	  }
-	},
-	"autoload-dev": {
-	  "psr-4": {
-          "Installer\\Test\\": "tests",
-          "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
-	  }
-	}
+    "type": "cakephp-plugin",
+    "require": {
+        "cakephp/cakephp": "3.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anuj Sharma",
+            "email": "anujsharma9196@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
 }
