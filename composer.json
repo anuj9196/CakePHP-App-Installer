@@ -3,7 +3,7 @@
     "description": "GUI Installer plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
-        "cakephp/cakephp": "~3.4"
+        "cakephp/cakephp": "^3.4"
     },
     "license": "MIT",
     "authors": [
@@ -12,5 +12,16 @@
             "email": "anujsharma9196@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Installer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Installer\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    },
     "minimum-stability": "dev"
 }
