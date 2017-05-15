@@ -1,6 +1,6 @@
 <div class="jumbotron">
-    <h1><?php echo __("Database connection test"); ?></h1>
-</div> <!-- .hero-unit -->
+    <h2><?php echo __("Database Connection Setup"); ?></h2>
+</div>
 
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
@@ -32,12 +32,21 @@
             <div class="form-group">
                 <label class="control-label col-sm-4" for="migrate_database">Import Database File?</label>
                 <div class="col-sm-8">
-                    <?= $this->Form->control('import_database', ['label' => false, 'value' => '1', 'class' => 'form-control']) ?>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value="1" name="import_database">
+                            Import Database
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <div class="panel panel-danger">
-                <div class="panel-body">A Basic Panel</div>
+                <div class="panel-body">
+                    <h4><b>NOTE:</b></h4>
+                    If you have <strong>checked</strong> <i>Import Database</i> field, make sure a file <i><b>my_schema.sql</b></i> exists in <i>config/</i> directory.
+                    Otherwise it will throw an error
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8">
