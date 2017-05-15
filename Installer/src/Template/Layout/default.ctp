@@ -28,7 +28,7 @@ $cakeDescription = 'Cake App Installer';
 	<meta name="author" content="">
 	<?php
 	echo $this->Html->meta('icon');
-    echo $this->Html->css('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+    echo $this->Html->css('bootstrap.min.css');
 	echo $this->fetch('meta');
 	echo $this->fetch('css');
 ?>
@@ -65,7 +65,10 @@ $cakeDescription = 'Cake App Installer';
 
 		<hr>
 		<footer>
-			<p class="pull-right">Anuj Sharma. &copy; <?php echo date("Y"); ?>.</p>
+			<p class="pull-right">
+				<?= $this->Html->link(__('GitHub Repository'), 'https://github.com/anuj9196/CakePHP-App-Installer') ?> &copy; <?php echo date("Y"); ?>.<br />
+				Developer <span class="glyphicon glyphicon-heart text-danger"></span> <?= $this->Html->link(__('Anuj Sharma'), 'http://profplus.in/anujsharma') ?>
+			</p>
 			<p>
 				Developped with the <?php echo $this->Html->link("CakePHP", "http://cakephp.org");?> Framework.<br/>
 				Designed with <?php echo $this->Html->link("Twitter Bootstrap", "http://twitter.github.com/bootstrap/");?>.
