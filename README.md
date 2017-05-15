@@ -64,7 +64,7 @@ Mark check **Import Database** in **Database Connection Setup** page
 #### Step 5:
 Installer will automatically import your schema to the database
 
-**NOTE:** Schema Import may take some time depending on the schema size. Please, do not close the window or refresh the page after clicking **Copy Schema** button
+> **NOTE:** Schema Import may take some time depending on the schema size. Please, do not close the window or refresh the page after clicking **Copy Schema** button
 
 ## Important Instruction
 1. You may need to give write permission ot */config* directory, because a file will be created inside this directory
@@ -72,3 +72,6 @@ Installer will automatically import your schema to the database
 1. Your **default connection** inside **Datasource** array of **app.php** will be overriden by new database configuration */config/database_config.php*
 1. You can still use **Datasources** array to create other connections, only **default** will be overridden.
 
+## Credits
+1. @prbaron for providing plugin for old version on CakePHP
+2. *Anshuman (my friend)* for asking me to write this plugin
