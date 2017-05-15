@@ -28,7 +28,7 @@ $cakeDescription = 'Cake App Installer';
 	<meta name="author" content="">
 	<?php
 	echo $this->Html->meta('icon');
-    echo $this->Html->css('bootstrap.min.css');
+    echo $this->Html->css('Installer.bootstrap.min.css');
 	echo $this->fetch('meta');
 	echo $this->fetch('css');
 ?>
