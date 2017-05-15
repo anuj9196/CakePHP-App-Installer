@@ -7,6 +7,7 @@ Router::plugin(
     'Installer',
     ['path' => '/installer'],
     function (RouteBuilder $routes) {
+        $routes->connect('/', ['controller' => 'Install', 'action' => 'index']);
         $routes->fallbacks(DashedRoute::class);
     }
 );
