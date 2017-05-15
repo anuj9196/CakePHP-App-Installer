@@ -1,73 +1,112 @@
 <?php
+use Cake\Cache\Cache;
+ ?>
+<?php
 	$check = true;
 ?>
-
 <div class="jumbotron">
-	<h1><?php echo __("Configuration tests"); ?></h1>
-</div> <!-- .hero-unit -->
+	<h2><?php echo __("Configuration Check"); ?></h2>
+</div>
 
 <div class="row">
 	<div class="span12">
 		<h2><?php echo __("Tests")?></h2>
-		<?php
-			if (is_writable(TMP)) {
-				$class = "success";
-				$message = __("The TMP folder is writable");
-			} else {
-				$check = false;
-				$class = "danger";
-				$message = __("The TMP folder is not writable");
-			}
-			echo '<div class="alert alert-'.$class.'"><p>' .$message. '</p></div>';
+
+	    <?php if (is_writable(TMP)):
+			$class = "success";
+			$glyphicon = 'ok';
+			$message = __("Your tmp directory is writable");
+	     else:
+			 $check = false;
+			 $class = "danger";
+			 $glyphicon = 'remove';
+			 $message = __("Your tmp directory is NOT writable");
+	    endif;
+		echo '<div class="alert alert-'.$class.'"><p><span class="glyphicon glyphicon-'.$glyphicon.'"></span> ' .$message. '</p></div>';
+		?>
+
+	    <?php if (is_writable(LOGS)):
+			$class = "success";
+			$glyphicon = 'ok';
+			$message = __("Your logs directory is writable");
+	     else:
+			 $check = false;
+			 $class = "danger";
+			 $glyphicon = 'remove';
+			 $message = __("Your logs directory is NOT writable");
+	    endif;
+		echo '<div class="alert alert-'.$class.'"><p><span class="glyphicon glyphicon-'.$glyphicon.'"></span> ' .$message. '</p></div>';
+		?>
+
+	    <?php $settings = Cache::config('_cake_core_'); ?>
+	    <?php if (!empty($settings)):
+			$class = "success";
+			$glyphicon = 'ok';
+			$message = __("The <em>".$settings['className']. "Engine</em> is being used for core caching. To change the config edit config/app.php");
+	     else:
+			 $check = false;
+			 $class = "danger";
+			 $glyphicon = 'remove';
+			 $message = __("Your cache is NOT working. Please check the settings in config/app.php");
+	    endif;
+		echo '<div class="alert alert-'.$class.'"><p><span class="glyphicon glyphicon-'.$glyphicon.'"></span> ' .$message. '</p></div>';
 		?>
 
 		<?php
 			if (is_writable(CONFIG)) {
 				$class = "success";
+				$glyphicon = 'ok';
 				$message = __("The Config folder is writable");
 			} else {
 				$check = false;
 				$class = "danger";
+   			    $glyphicon = 'remove';
 				$message = __("The Config folder is not writable");
 			}
-			echo '<div class="alert alert-'.$class.'"><p>' .$message. '</p></div>';
+			echo '<div class="alert alert-'.$class.'"><p><span class="glyphicon glyphicon-'.$glyphicon.'"></span> ' .$message. '</p></div>';
 		?>
 
 		<?php
 			if (extension_loaded('intl')) {
 				$class = "success";
+				$glyphicon = 'ok';
 				$message = __("intl extension enabled");
 			} else {
 				$check = false;
 				$class = "danger";
+   			    $glyphicon = 'remove';
 				$message = __("You must enable the intl extension to use CakePHP");
 			}
-			echo '<div class="alert alert-'.$class.'"><p>' .$message. '</p></div>';
+			echo '<div class="alert alert-'.$class.'"><p><span class="glyphicon glyphicon-'.$glyphicon.'"></span> ' .$message. '</p></div>';
 		?>
 
 		<?php
 			if (extension_loaded('mbstring')) {
 				$class = "success";
+				$glyphicon = 'ok';
 				$message = __("mbstring extension enabled");
 			} else {
 				$check = false;
 				$class = "danger";
+   			    $glyphicon = 'remove';
 				$message = __("You must enable the mbstring extension to use CakePHP");
 			}
-			echo '<div class="alert alert-'.$class.'"><p>' .$message. '</p></div>';
+			echo '<div class="alert alert-'.$class.'"><p><span class="glyphicon glyphicon-'.$glyphicon.'"></span> ' .$message. '</p></div>';
 		?>
 
 		<?php
 			if (version_compare(PHP_VERSION, '5.6.0') < 0) {
 				$check = false;
 				$class = "danger";
+   			    $glyphicon = 'remove';
 				$message = __("Your PHP version must be equal or higher than 5.6.0 to use CakePHP (".PHP_VERSION.")");
 			} else {
 				$class = "success";
+				$glyphicon = 'ok';
 				$message = __("Your PHP version is equal or higher than 5.6.0 to use CakePHP (".PHP_VERSION.")");
 			}
 
-			echo '<div class="alert alert-'.$class.'"><p>' .$message. '<p></div>';
+			echo '<div class="alert alert-'.$class.'"><p><span class="glyphicon glyphicon-'.$glyphicon.'"></span> ' .$message. '<p></div>';
 		?>
 	</div> <!-- .span12 -->
 </div> <!-- .row -->
@@ -75,35 +114,18 @@
 <div class="row">
 	<div class="span12">
 		<?php if($check): ?>
-			<p><?= __("Your configuration passed all tests successfully. What do you want to do?") ?></p>
 			<div class="row" style="margin-top: 60px;">
-				<div class="span6">
-					<h2>Create new database</h2>
-					<p>You want to create a new database and create the tables and entries associated.</p>
-
-					<?= $this->Form->create() ?>
-						<?= $this->Form->control('create', ['type'  => 'hidden', 'value' => 1]) ?>
-						<div class="form-actions">
-							<?= $this->Form->control("Create database", ['label' => false, 'type'  => 'submit', 'class' => 'btn btn-primary']) ?>
-						</div>
-					<?= $this->Form->end()?>
-				</div> <!-- .span -->
-
-				<div class="span6">
-					<h2>Connect to existing database</h2>
-					<p>The database and tables are already created, you just want to connect your application.</p>
-
-					<?= $this->Form->create()?>
-						<?= $this->Form->input("connect", ['type'  => 'hidden', 'value' => 1]) ?>
-						<div class="form-actions">
-							<?= $this->Form->control("Connect database", ['label' => false, 'type'  => 'submit', 'class' => 'btn btn-primary']) ?>
-						</div>
-					<?= $this->Form->end() ?>
-				</div> <!-- .span -->
+				<div class="col-md-8 col-md-offset-2 text-center">
+					<p><?= __("Your configuration passed all tests successfully") ?></p>
+					<h2>Continue to Database Configuration</h2>
+					<div class="text-center">
+						<?= $this->Html->link(__('Configure Database').' <span class="glyphicon glyphicon-menu-right"></span>', ['action' => 'connection'], ['class' => 'btn btn-primary', 'escape' => false]) ?>
+					</div>
+				</div>
 			</div> <!-- .row -->
 		<?php else : ?>
 			<div class="alert alert-danger">
-				<p><?php echo __("You configuration does not correspond to the minimal required. Please update it and retry."); ?></p>
+				<p><span class="glyphicon glyphicon-remove"></span> <?php echo __("You configuration does not correspond to the minimal required. Please update it and retry."); ?></p>
 			</div> <!-- .alert -->
 		<?php endif; ?>
 	</div> <!-- .span12 -->
