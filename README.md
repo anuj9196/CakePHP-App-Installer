@@ -4,6 +4,8 @@
  **Current Version:** v1.0.0
  
  **Last Update:** May 16, 2017
+ 
+ **Releases:** [Releases](https://github.com/anuj9196/CakePHP-App-Installer/releases)
 
 ## Requirements
 #### CakePHP: 3.4+
