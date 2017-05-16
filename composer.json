@@ -15,6 +15,10 @@
             "email": "anujsharma9196@gmail.com"
         }
     ],
+	"support": {
+	  "issues": "https://github.com/anuj9196/CakePHP-App-Installer/issues",
+	  "source": "https://github.com/anuj9196/CakePHP-App-Installer"
+    },
     "autoload": {
         "psr-4": {
             "Installer\\": "src"
