@@ -3,7 +3,7 @@
     "description": "GUI Installer Plugin for CakePHP",
     "type": "cakephp-plugin",
     "keywords": ["cakephp", "cakephp-3.4", "cakephp-3", "app-installer", "installer", "CakePHP-GUI-Installer"],
-    "homepage": "https://github.com/anuj9196/CakePHP-App-Installer"
+    "homepage": "https://github.com/anuj9196/CakePHP-App-Installer",
     "require": {
         "cakephp/cakephp": "^3.4"
     },
