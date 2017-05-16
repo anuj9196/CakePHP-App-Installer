@@ -3,7 +3,7 @@ use Cake\Core\Configure;
 /**
  * Path constants
  */
-	define('PLUGIN_CONFIG', ROOT. 'plugins' .DS. 'Installer' .DS. 'config' .DS);
+	define('PLUGIN_CONFIG', dirname(__DIR__) . DS . 'config' .DS);
 /**
  * Database installation variable
  * if set to TRUE, the database is installed
