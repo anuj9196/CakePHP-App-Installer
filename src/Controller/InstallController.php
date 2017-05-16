@@ -113,8 +113,7 @@ class InstallController extends AppController
                     /**
                     * We will create the true database_config.php file with our configuration
                     */
-                    $PLUGIN_CONFIG = ROOT.DS.'plugins'.DS.'Installer'.DS.'config'.DS;
-                    copy($PLUGIN_CONFIG.'database.php.install', CONFIG.'database_config.php');
+                    copy(PLUGIN_CONFIG.'database.php.install', CONFIG.'database_config.php');
                     $file = new File(CONFIG. 'database_config.php');
                     $content = $file->read();
                     foreach($config as $k => $v) {
@@ -217,9 +216,7 @@ class InstallController extends AppController
     * change Database.Installed to true
     */
     protected function _changeConfiguration() {
-        $PLUGIN_CONFIG = ROOT.DS.'plugins'.DS.'Installer'.DS.'config'.DS;
-
-        $path = $PLUGIN_CONFIG.'bootstrap.php';
+        $path = PLUGIN_CONFIG.'bootstrap.php';
 
         $file = new File($path);
         $contents = $file->read();
