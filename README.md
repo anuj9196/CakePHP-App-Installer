@@ -1,8 +1,9 @@
 # Installer plugin for CakePHP
 
 ## Version/Update
-#### Version: dev
-#### Last Update: May 16, 2017
+ **Current Version:** v1.0.0
+ 
+ **Last Update:** May 16, 2017
 
 ## Requirements
 #### CakePHP: 3.4+
