@@ -1,0 +1,32 @@
+#This Travis config template file was taken from https://github.com/FriendsOfCake/travis
+language: php
+
+php:
+  - 5.6
+  - 7.0
+
+sudo: false
+
+env:
+  global:
+    - DEFAULT=1
+
+matrix:
+  fast_finish: true
+
+  include:
+    php: 5.6
+    env: PHPCS=1 DEFAULT=0
+
+    php: 5.6
+    env: COVERALLS=1 DEFAULT=0
+
+install:
+  - composer self-update
+  - composer install --prefer-dist --no-interaction --dev
+
+after_script:
+  - sh -c "cat build/logs/clover.xml"
+
+notifications:
+email: true
