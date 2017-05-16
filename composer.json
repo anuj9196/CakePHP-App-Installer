@@ -3,7 +3,7 @@
     "description": "GUI Installer plugin for CakePHP",
     "type": "cakephp-plugin",
     "require-dev": {
-        "cakephp/cakephp": "~3.4"
+        "cakephp/cakephp": "^3.4"
     },
     "license": "MIT",
     "authors": [
