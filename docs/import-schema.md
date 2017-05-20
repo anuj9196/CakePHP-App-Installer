@@ -17,3 +17,5 @@ Installer will automatically import your schema to the database
 ### Important Intruction
 Please make sure file name is **my_shema.sql** and it must be an exported file or has been checked for any error in the file before importing.
 This plugin will not check for errors in your **my_schema.sql** file
+
+[< Readme](../README.md) | [Automation >](automation.md)
