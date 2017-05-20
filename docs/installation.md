@@ -38,4 +38,4 @@ try {
 
 You can also configure your application to auto check for database configuration so that any modification in database configuration will redirect user to re-configuration of the database. Fore more guide [Click Here](automation.md)
 
-[< Readme](../README.md) | [Running Installer >](running-installer.md)
+[< README](../README.md) | [Running Installer >](running-installer.md)
