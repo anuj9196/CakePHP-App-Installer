@@ -47,4 +47,4 @@ Your `beforeRender` function then looks like
  
  **That's it** Now whenever there is database connectivity failure, you will be asked to reconfigure your application.
 
-[< Importing Schema](import-schema.md) | [< README](../README.md) | [Credits >](../README.md#credits)
+[< Importing Schema](import-schema.md) | [README](../README.md) | [Credits >](../README.md#credits)
