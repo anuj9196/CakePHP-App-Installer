@@ -1,7 +1,7 @@
 # Installer plugin for CakePHP
 
 ## Version/Update
- **Current Version:** v1.1.0
+ **Current Version:** v1.1.4
  
  **Last Update:** May 20, 2017
  
