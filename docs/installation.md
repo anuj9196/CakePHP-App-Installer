@@ -14,6 +14,10 @@ load Installer plugin to your CakePHP Application by adding below like to your *
 ```
 Plugin::load('Installer', ['bootstrap' => true, 'routes' => true]);
 ```
+or from terminal
+```
+bin/cake plugin load Installer -b -r
+```
 
 ## Setup
 below following script inside **bootstrap.php** file in */config* directory
