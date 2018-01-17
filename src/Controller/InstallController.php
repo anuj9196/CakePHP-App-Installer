@@ -1,6 +1,8 @@
 <?php
 namespace Installer\Controller;
 
+use Cake\Database\Exception\MissingConnectionException;
+use Exception;
 use Installer\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Core\Configure;
@@ -9,10 +11,6 @@ use Cake\Filesystem\File;
 
 /**
 * Install Controller
-*
-* @property \Installer\Model\Table\InstallTable $Install
-*
-* @method \Installer\Model\Entity\Install[] paginate($object = null, array $settings = [])
 */
 class InstallController extends AppController
 {
@@ -35,11 +33,12 @@ class InstallController extends AppController
     );
 
     /**
-    * beforeFilter
-    *
-    * @access	public
-    * @return	void
-    */
+     * beforeFilter
+     *
+     * @access public
+     * @param Event $event
+     * @return void
+     */
     public function beforeFilter(Event $event) {
         parent::beforeFilter($event);
         $this->loadComponent('Auth');
@@ -105,24 +104,31 @@ class InstallController extends AppController
 
             try {
                 /**
-                * Try to connect the database with the new configuration
-                */
-                ConnectionManager::config('my_default', $config);
+                 * Try to connect the database with the new configuration
+                 */
+//                ConnectionManager::config('my_default', $config);
+//                ConnectionManager::get('my_default', $config);
                 $db = ConnectionManager::get('my_default');
-                if(!$db->connect()) {
-                    $this->Flash->error(__("Cannot connect to the database"));
-                } else {
+
+                try {
+                    $connected = $db->connect();
+                } catch (Exception $connectionError) {
+                    $connected = false;
+                    $this->Flash->error("Cannot connect to database: ".$connectionError->getMessage());
+                }
+
+                if ($connected) {
                     /**
-                    * We will create the true database_config.php file with our configuration
-                    */
-                    copy(PLUGIN_CONFIG.'database.php.install', CONFIG.'database_config.php');
-                    $file = new File(CONFIG. 'database_config.php');
+                     * We will create the true database_config.php file with our configuration
+                     */
+                    copy(PLUGIN_CONFIG . 'database.php.install', CONFIG . 'database_config.php');
+                    $file = new File(CONFIG . 'database_config.php');
                     $content = $file->read();
-                    foreach($config as $k => $v) {
-                        $content = str_replace('{default_' .$k.  '}', $v, $content);
+                    foreach ($config as $k => $v) {
+                        $content = str_replace('{default_' . $k . '}', $v, $content);
                     }
 
-                    if($file->write($content)) {
+                    if ($file->write($content)) {
 
                         $this->Flash->success(__("Connected to the database"));
 
@@ -137,8 +143,10 @@ class InstallController extends AppController
                         $this->Flash->error(__("database_config.php file cannot be modified"));
                     }
                 }
+            } catch (MissingConnectionException $e) {
+                $this->Flash->error($e->getMessage());
             } catch(Exception $e) {
-                $this->Flash->error(__("Cannot connect to the database"));
+                $this->Flash->error(__("Cannot connect to the database: " . $e->getMessage()));
             }
         } // post
         $this->set($d);
@@ -158,11 +166,13 @@ class InstallController extends AppController
         $db = ConnectionManager::get('default');
 
         // connection to the database
-        if(!$db->connect()) {
+        try {
+            $database_connect = $db->connect();
+        } catch (Exception $connectionError) {
             $database_connect = false;
-        } else {
-            $database_connect = true;
+            $this->Flash->error('Can not connect to database: ' . $connectionError->getMessage());
         }
+
         $this->set(compact('database_connect'));
 
         if($this->request->is('post')) {
@@ -170,9 +180,15 @@ class InstallController extends AppController
             $db = ConnectionManager::get('default');
 
             // connection to the database
-            if(!$db->connect()) {
-                $this->Flash->error(__("Cannot connect to the database"));
-            } else {
+            try {
+                $connected = $db->connect();
+            } catch (Exception $connectionError) {
+                $connected = false;
+                $this->Flash->error('Can not connect to database: ' . $connectionError->getMessage());
+            }
+
+            // connection to the database
+            if($connected) {
                 $sql_file = new File(CONFIG.'schema'.DS.'my_schema.sql');
                 if (!$sql_file->exists()) {
                     $this->Flash->error(__('Schema file does not exists. Make sure my_schema.sql exists in /config/schema/my_schema.sql'));
