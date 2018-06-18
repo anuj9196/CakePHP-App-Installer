@@ -90,10 +90,10 @@ class InstallController extends AppController
             $config = $this->DEFAULT_CONFIG;
 
             // loads form data
-            $data = $this->request->getData();
+            $data = $this->request->data();
 
             // check if import_database is checked
-            $import_database = $this->request->getData('import_database');
+            $import_database = $this->request->data('import_database');
 
             // replaces default config by form data
             foreach($data as $k => $v) {
