@@ -3,11 +3,11 @@ namespace Installer\Controller;
 
 use Cake\Database\Exception\MissingConnectionException;
 use Exception;
-use Installer\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\File;
+use Migrations\Migrations;
 
 /**
 * Install Controller
@@ -68,7 +68,7 @@ class InstallController extends AppController
             $data = $this->request->data();
 
             // check if import_database is checked
-            $import_database = $this->request->data('import_database');
+            $import_database = $this->request->data('import_database') || Configure::read('Installer.Import.migrations');
 
             // replaces default config by form data
             foreach ($data as $k => $v) {
@@ -177,29 +177,15 @@ class InstallController extends AppController
 
             // connection to the database
             if ($connected) {
-                $sql_file = new File(CONFIG.'schema'.DS.'my_schema.sql');
-                if (!$sql_file->exists()) {
-                    $this->Flash->error(__('Schema file does not exists. Make sure my_schema.sql exists in /config/schema/my_schema.sql'));
-                } else {
-                    if (!$sql_file->size() > 0) {
-                        $this->Flash->error(__('It seems schema file is empty. Please check if schema exits at /config/schema/my_schema.sql'));
-                    } else {
-                        $sql_content = $sql_file->read();
-                        // fetches all information of the tables of the Schema.php file (app/Config/Schema/Schema.php)
-                        if ($db->execute($sql_content)) {
-                            $this->Flash->success(__('Database imported'));
-                        } else {
-                            $this->Flash->error(__('Database Import Failed'));
-                        }
-                        $this->redirect(array('action' => 'finish'));
-                    }
+                if ($this->_importSchema($db) && $this->_handleMigrations()) {
+                    $this->Flash->success(__('Database imported'));
+                    $this->redirect(array('action' => 'finish'));
                 }
             }
         }
 
         $this->set($d);
     } // function
-
 
     /**
     * STEP 4 - INSTALLATION COMPLETE
@@ -232,5 +218,70 @@ class InstallController extends AppController
         } else {
             return false;
         }
+    }
+
+    /**
+     * @access	protected
+     * @return	bool
+     */
+    protected function _importSchema($db) {
+        $schema = Configure::read('Installer.Import.schema');
+        if (!$schema) {
+            return true;
+        }
+
+        $sql_file = new File(CONFIG . $schema);
+        if (!$sql_file->exists()) {
+            $this->Flash->error(__('Schema file does not exists. Make sure /config{0} exists.', $schema));
+            return false;
+        }
+
+        if (!$sql_file->size() > 0) {
+            $this->Flash->error(__('It seems schema file is empty. Please check if schema exists at /config{0}', $schema));
+            return false;
+        }
+
+        // fetches all information of the tables of the schema file
+        $sql_content = $sql_file->read();
+        // TODO: Perhaps support Cake's schema-dump-default.lock JSON format?
+        if (!$db->execute($sql_content)) {
+            $this->Flash->error(__('Database Import Failed'));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @access	protected
+     * @return	bool
+     */
+    protected function _handleMigrations() {
+        if (!Configure::read('Installer.Import.migrations')) {
+            return true;
+        }
+
+        try {
+            $migrations = new Migrations(['connection' => 'default']);
+
+            // Check if there is a pre-migrate callback
+            $pre_migrate = Configure::read('Installer.Import.pre_migrate');
+            if ($pre_migrate) {
+                $pre_migrate($this, $migrations);
+            }
+
+            $migrations->migrate();
+
+            // Check if there is a post-migrate callback
+            $post_migrate = Configure::read('Installer.Import.post_migrate');
+            if ($post_migrate) {
+                $post_migrate($this, $migrations);
+            }
+        } catch (\Exception $ex) {
+            $this->Flash->error(__('Database Import Failed: {0}', $ex->getMessage()));
+            return false;
+        }
+
+        return true;
     }
 }

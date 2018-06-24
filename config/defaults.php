@@ -53,5 +53,11 @@ return [
                 'default' => CONFIG . '.env.default',
             ],
         ],
+
+        'Import' => [
+            'ask' => true,
+            'schema' => 'schema' . DS . 'my_schema.sql',
+            'migrations' => false,
+        ],
     ],
 ];

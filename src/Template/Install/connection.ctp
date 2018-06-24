@@ -32,6 +32,8 @@ use \Cake\Core\Configure;
                     <?= $this->Form->control('database', ['label' => false, 'value' => Configure::read('Installer.Connection.database'), 'class' => 'form-control', 'placeholder' => __('Database Name')]) ?>
                 </div>
             </div>
+
+<?php if (Configure::read('Installer.Import.ask')): ?>
             <div class="form-group">
                 <label class="control-label col-sm-4" for="migrate_database"><?= __('Import Database File?') ?></label>
                 <div class="col-sm-8">
@@ -47,9 +49,11 @@ use \Cake\Core\Configure;
             <div class="panel panel-danger">
                 <div class="panel-body">
                     <h4><b><?= __('NOTE:') ?></b></h4>
-                    <p><?= __('If you have <strong>checked</strong> <i>Import Database</i> field, make sure a file <i><b>my_schema.sql</b></i> exists in <i>config/</i> directory. Otherwise it will throw an error.') ?></p>
+                    <p><?= __('If you have <strong>checked</strong> <i>Import Database</i> field, make sure the <i><b>config/{0}</b></i> file exists. Otherwise it will throw an error.', Configure::read('Installer.Import.schema')) ?></p>
                 </div>
             </div>
+<?php endif; ?>
+
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8">
                     <button type="submit" class="btn btn-primary"><?= __('Submit') ?></button>
