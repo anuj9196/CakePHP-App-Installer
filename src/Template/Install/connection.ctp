@@ -1,3 +1,6 @@
+<?php
+use \Cake\Core\Configure;
+?>
 <div class="jumbotron">
     <h2><?= __('Database Connection Setup') ?></h2>
 </div>
@@ -8,13 +11,13 @@
             <div class="form-group">
                 <label class="control-label col-sm-4" for="host"><?= __('Host') ?> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="<?= __('Host Name or IP Address') ?>"></span></label>
                 <div class="col-sm-8">
-                    <?= $this->Form->control('host', ['label' => false, 'value' => 'localhost', 'class' => 'form-control', 'placeholder' => __('Host')]) ?>
+                    <?= $this->Form->control('host', ['label' => false, 'value' => Configure::read('Installer.Connection.host'), 'class' => 'form-control', 'placeholder' => __('Host')]) ?>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-4" for="username"><?= __('Username') ?> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="<?= __('Database connection login') ?>"></span></label>
                 <div class="col-sm-8">
-                    <?= $this->Form->control('username', ['label' => false, 'value' => 'root', 'class' => 'form-control', 'placeholder' => __('Datebase Username')]) ?>
+                    <?= $this->Form->control('username', ['label' => false, 'value' => Configure::read('Installer.Connection.username'), 'class' => 'form-control', 'placeholder' => __('Datebase Username')]) ?>
                 </div>
             </div>
             <div class="form-group">
@@ -26,7 +29,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-4" for="database"><?= __('Database Name') ?> <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top" title="<?= __('Database must have been created') ?>"></span></label>
                 <div class="col-sm-8">
-                    <?= $this->Form->control('database', ['label' => false, 'value' => 'cakephp', 'class' => 'form-control', 'placeholder' => __('Database Name')]) ?>
+                    <?= $this->Form->control('database', ['label' => false, 'value' => Configure::read('Installer.Connection.database'), 'class' => 'form-control', 'placeholder' => __('Database Name')]) ?>
                 </div>
             </div>
             <div class="form-group">

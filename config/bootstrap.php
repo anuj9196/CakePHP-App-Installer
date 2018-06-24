@@ -10,3 +10,8 @@ use Cake\Core\Configure;
  * if set to FALSE, the databse is not installed
  */
     Configure::write('Database.installed', false);
+
+    Configure::load('Installer.defaults');
+    collection((array)Configure::read('Installer.config'))->each(function ($file) {
+        Configure::load($file);
+    });

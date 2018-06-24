@@ -15,24 +15,6 @@ use Cake\Filesystem\File;
 class InstallController extends AppController
 {
     /**
-    * Default configuration
-    *
-    * @access	public
-    * @return	void
-    */
-    public $DEFAULT_CONFIG = array(
-        'className'  => 'Cake\Database\Connection',
-        'driver'     => 'Cake\Database\Driver\Mysql',
-        'persistent' => false,
-        'host'       => 'localhost',
-        'username'   => 'root',
-        'password'   => '',
-        'database'   => 'cakephp',
-        'prefix'     => '',
-        'encoding'   => 'UTF8',
-    );
-
-    /**
      * beforeFilter
      *
      * @access public
@@ -80,15 +62,8 @@ class InstallController extends AppController
     public function connection() {
         $this->_check();
         $d['title_for_layout'] = __('Database Connection Setup');
-        if (!file_exists(CONFIG.'app.default.php')) {
-            rename(CONFIG.'app.default.php', CONFIG.'app.php');
-        }
 
         if ($this->request->is('post')) {
-
-            // loads the default configuration
-            $config = $this->DEFAULT_CONFIG;
-
             // loads form data
             $data = $this->request->data();
 
@@ -96,9 +71,9 @@ class InstallController extends AppController
             $import_database = $this->request->data('import_database');
 
             // replaces default config by form data
-            foreach($data as $k => $v) {
-                if(isset($data[$k])) {
-                    $config[$k] = $v;
+            foreach ($data as $k => $v) {
+                if (isset($data[$k])) {
+                    Configure::write("Installer.Connection.$k", $v);
                 }
             }
 
@@ -106,8 +81,7 @@ class InstallController extends AppController
                 /**
                  * Try to connect the database with the new configuration
                  */
-//                ConnectionManager::config('my_default', $config);
-//                ConnectionManager::get('my_default', $config);
+                ConnectionManager::config('my_default', Configure::read('Installer.Connection'));
                 $db = ConnectionManager::get('my_default');
 
                 try {
@@ -119,16 +93,30 @@ class InstallController extends AppController
 
                 if ($connected) {
                     /**
-                     * We will create the true database_config.php file with our configuration
+                     * We will create the true database configuration file with our configuration
                      */
-                    copy(PLUGIN_CONFIG . 'database.php.install', CONFIG . 'database_config.php');
-                    $file = new File(CONFIG . 'database_config.php');
-                    $content = $file->read();
-                    foreach ($config as $k => $v) {
-                        $content = str_replace('{default_' . $k . '}', $v, $content);
+                    $success = true;
+                    $written = [];
+                    foreach (Configure::read('Installer.Files') as $key => $config) {
+                        if ($config['use'] && !file_exists(CONFIG . $config['filename'])) {
+                            $input = new File($config['default']);
+                            $content = $input->read();
+                            foreach (Configure::read('Installer.Connection') as $k => $v) {
+                                $content = str_replace('{default_' . $k . '}', $v, $content);
+                            }
+
+                            $output = new File(CONFIG . $config['filename']);
+                            if ($output->write($content)) {
+                                $written[] = $output;
+                            } else {
+                                $this->Flash->error(__('{0} file cannot be modified', $config['filename']));
+                                $success = false;
+                                break;
+                            }
+                        }
                     }
 
-                    if ($file->write($content)) {
+                    if ($success) {
                         $this->Flash->success(__('Connected to the database'));
 
                         // import database if import_database is checked
@@ -138,7 +126,10 @@ class InstallController extends AppController
                             $this->redirect(['action' => 'finish']);
                         }
                     } else {
-                        $this->Flash->error(__('database_config.php file cannot be modified'));
+                        // Remove any config files that were written successfully, so that we try them again next time.
+                        foreach ($written as $file) {
+                            $file->delete();
+                        }
                     }
                 }
             } catch (MissingConnectionException $e) {
