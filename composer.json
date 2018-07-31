@@ -2,10 +2,10 @@
     "name": "cakephp-app-installer/installer",
     "description": "GUI Installer Plugin for CakePHP",
     "type": "cakephp-plugin",
-    "keywords": ["cakephp", "cakephp-3.4", "cakephp-3", "app-installer", "installer", "CakePHP-GUI-Installer"],
+    "keywords": ["cakephp", "cakephp-3.3", "cakephp-3", "app-installer", "installer", "CakePHP-GUI-Installer"],
     "homepage": "https://github.com/anuj9196/CakePHP-App-Installer",
     "require": {
-        "cakephp/cakephp": "^3.4"
+        "cakephp/cakephp": "^3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7|^6.0"
@@ -17,9 +17,9 @@
             "email": "anujsharma9196@gmail.com"
         }
     ],
-	"support": {
-	  "issues": "https://github.com/anuj9196/CakePHP-App-Installer/issues",
-	  "source": "https://github.com/anuj9196/CakePHP-App-Installer"
+    "support": {
+      "issues": "https://github.com/anuj9196/CakePHP-App-Installer/issues",
+      "source": "https://github.com/anuj9196/CakePHP-App-Installer"
     },
     "autoload": {
         "psr-4": {

@@ -15,24 +15,6 @@ use Cake\Filesystem\File;
 class InstallController extends AppController
 {
     /**
-    * Default configuration
-    *
-    * @access	public
-    * @return	void
-    */
-    public $DEFAULT_CONFIG = array(
-        'className'  => 'Cake\Database\Connection',
-        'driver'     => 'Cake\Database\Driver\Mysql',
-        'persistent' => false,
-        'host'       => 'localhost',
-        'username'   => 'root',
-        'password'   => '',
-        'database'   => 'cakephp',
-        'prefix'     => '',
-        'encoding'   => 'UTF8',
-    );
-
-    /**
      * beforeFilter
      *
      * @access public
@@ -52,8 +34,8 @@ class InstallController extends AppController
     * @return	void
     */
     protected function _check(){
-        if(Configure::read('Database.installed') == true) {
-            $this->Flash->success(__("Website already configured"));
+        if (Configure::read('Database.installed') == true) {
+            $this->Flash->success(__('Website already configured'));
             $this->redirect('/');
         }
     }
@@ -67,7 +49,7 @@ class InstallController extends AppController
     */
     public function index() {
         $this->_check();
-        $d['title_for_layout'] = __("Configuration Check");
+        $d['title_for_layout'] = __('Configuration Check');
         $this->set($d);
     }
 
@@ -79,26 +61,19 @@ class InstallController extends AppController
     */
     public function connection() {
         $this->_check();
-        $d['title_for_layout'] = __("Database Connection Setup");
-        if (!file_exists(CONFIG.'app.default.php')) {
-            rename(CONFIG.'app.default.php', CONFIG.'app.php');
-        }
+        $d['title_for_layout'] = __('Database Connection Setup');
 
-        if($this->request->is('post')) {
-
-            // loads the default configuration
-            $config = $this->DEFAULT_CONFIG;
-
+        if ($this->request->is('post')) {
             // loads form data
-            $data = $this->request->getData();
+            $data = $this->request->data();
 
             // check if import_database is checked
-            $import_database = $this->request->getData('import_database');
+            $import_database = $this->request->data('import_database');
 
             // replaces default config by form data
-            foreach($data as $k => $v) {
-                if(isset($data[$k])) {
-                    $config[$k] = $v;
+            foreach ($data as $k => $v) {
+                if (isset($data[$k])) {
+                    Configure::write("Installer.Connection.$k", $v);
                 }
             }
 
@@ -106,31 +81,43 @@ class InstallController extends AppController
                 /**
                  * Try to connect the database with the new configuration
                  */
-//                ConnectionManager::config('my_default', $config);
-//                ConnectionManager::get('my_default', $config);
+                ConnectionManager::config('my_default', Configure::read('Installer.Connection'));
                 $db = ConnectionManager::get('my_default');
 
                 try {
                     $connected = $db->connect();
                 } catch (Exception $connectionError) {
                     $connected = false;
-                    $this->Flash->error("Cannot connect to database: ".$connectionError->getMessage());
+                    $this->Flash->error(__('Cannot connect to database: {0}', $connectionError->getMessage()));
                 }
 
                 if ($connected) {
                     /**
-                     * We will create the true database_config.php file with our configuration
+                     * We will create the true database configuration file with our configuration
                      */
-                    copy(PLUGIN_CONFIG . 'database.php.install', CONFIG . 'database_config.php');
-                    $file = new File(CONFIG . 'database_config.php');
-                    $content = $file->read();
-                    foreach ($config as $k => $v) {
-                        $content = str_replace('{default_' . $k . '}', $v, $content);
+                    $success = true;
+                    $written = [];
+                    foreach (Configure::read('Installer.Files') as $key => $config) {
+                        if ($config['use'] && !file_exists(CONFIG . $config['filename'])) {
+                            $input = new File($config['default']);
+                            $content = $input->read();
+                            foreach (Configure::read('Installer.Connection') as $k => $v) {
+                                $content = str_replace('{default_' . $k . '}', $v, $content);
+                            }
+
+                            $output = new File(CONFIG . $config['filename']);
+                            if ($output->write($content)) {
+                                $written[] = $output;
+                            } else {
+                                $this->Flash->error(__('{0} file cannot be modified', $config['filename']));
+                                $success = false;
+                                break;
+                            }
+                        }
                     }
 
-                    if ($file->write($content)) {
-
-                        $this->Flash->success(__("Connected to the database"));
+                    if ($success) {
+                        $this->Flash->success(__('Connected to the database'));
 
                         // import database if import_database is checked
                         if ($import_database) {
@@ -138,15 +125,17 @@ class InstallController extends AppController
                         } else {
                             $this->redirect(['action' => 'finish']);
                         }
-
                     } else {
-                        $this->Flash->error(__("database_config.php file cannot be modified"));
+                        // Remove any config files that were written successfully, so that we try them again next time.
+                        foreach ($written as $file) {
+                            $file->delete();
+                        }
                     }
                 }
             } catch (MissingConnectionException $e) {
                 $this->Flash->error($e->getMessage());
             } catch(Exception $e) {
-                $this->Flash->error(__("Cannot connect to the database: " . $e->getMessage()));
+                $this->Flash->error(__('Cannot connect to the database: {0}', $e->getMessage()));
             }
         } // post
         $this->set($d);
@@ -160,8 +149,7 @@ class InstallController extends AppController
     */
     public function data() {
         $this->_check();
-        $d['title_for_layout'] = __("Database Construction");
-
+        $d['title_for_layout'] = __('Database Construction');
 
         $db = ConnectionManager::get('default');
 
@@ -170,12 +158,12 @@ class InstallController extends AppController
             $database_connect = $db->connect();
         } catch (Exception $connectionError) {
             $database_connect = false;
-            $this->Flash->error('Can not connect to database: ' . $connectionError->getMessage());
+            $this->Flash->error(__('Can not connect to database: {0}', $connectionError->getMessage()));
         }
 
         $this->set(compact('database_connect'));
 
-        if($this->request->is('post')) {
+        if ($this->request->is('post')) {
 
             $db = ConnectionManager::get('default');
 
@@ -184,11 +172,11 @@ class InstallController extends AppController
                 $connected = $db->connect();
             } catch (Exception $connectionError) {
                 $connected = false;
-                $this->Flash->error('Can not connect to database: ' . $connectionError->getMessage());
+                $this->Flash->error(__('Can not connect to database: {0}', $connectionError->getMessage()));
             }
 
             // connection to the database
-            if($connected) {
+            if ($connected) {
                 $sql_file = new File(CONFIG.'schema'.DS.'my_schema.sql');
                 if (!$sql_file->exists()) {
                     $this->Flash->error(__('Schema file does not exists. Make sure my_schema.sql exists in /config/schema/my_schema.sql'));
@@ -221,10 +209,10 @@ class InstallController extends AppController
     */
     public function finish() {
         $this->_check();
-        $d['title_for_layout'] = __("Installation Complete");
+        $d['title_for_layout'] = __('Installation Complete');
 
-        if(!$this->_changeConfiguration()){
-         	$this->Flash->error(__("Cannot modify Database.installed variable in /plugins/Installer/config/bootstrap.php"));
+        if (!$this->_changeConfiguration()){
+            $this->Flash->error(__('Cannot modify Database.installed variable in /plugins/Installer/config/bootstrap.php; you must manually update this to true to prevent a later install from overwriting your configuration!'));
         }
 
         $this->set($d);
@@ -239,7 +227,7 @@ class InstallController extends AppController
         $file = new File($path);
         $contents = $file->read();
         $content_new = str_replace('false', 'true', $contents);
-        if($file->write($content_new)) {
+        if ($file->write($content_new)) {
             return true;
         } else {
             return false;

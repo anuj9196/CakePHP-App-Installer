@@ -13,68 +13,68 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = 'Cake App Installer';
+$cakeDescription = __('Cake App Installer');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>
+    <meta charset="utf-8">
+    <title>
         <?= $title_for_layout ?> |
         <?= $cakeDescription ?>
     </title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<?php
-	echo $this->Html->meta('icon');
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <?php
+    echo $this->Html->meta('icon');
     echo $this->Html->css('Installer.bootstrap.min.css');
-	echo $this->fetch('meta');
-	echo $this->fetch('css');
+    echo $this->fetch('meta');
+    echo $this->fetch('css');
 ?>
 
-	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-	<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Cake App Installer</a>
-    </div>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only"><?= __('Toggle navigation') ?></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><?= $cakeDescription ?></a>
+        </div>
 
-  </div><!-- /.container-fluid -->
+    </div><!-- /.container-fluid -->
 </nav>
 
 <div class="container">
 
-      <?php echo $this->Flash->render(); ?>
-		<!-- nocache -->
+    <?= $this->Flash->render() ?>
+    <!-- nocache -->
 
-		<?php echo $this->fetch('content'); ?>
+    <?= $this->fetch('content') ?>
 
-		<hr>
-		<footer>
-			<p class="pull-right">
-				<?= $this->Html->link(__('GitHub Repository'), 'https://github.com/anuj9196/CakePHP-App-Installer') ?> &copy; <?php echo date("Y"); ?>.<br />
-				Developer <span class="glyphicon glyphicon-heart text-danger"></span> <?= $this->Html->link(__('Anuj Sharma'), 'http://profplus.in/anujsharma') ?>
-			</p>
-			<p>
-				Developped with the <?php echo $this->Html->link("CakePHP", "http://cakephp.org");?> Framework.<br/>
-				Designed with <?php echo $this->Html->link("Twitter Bootstrap", "http://twitter.github.com/bootstrap/");?>.
-			</p>
-		</footer>
-	</div> <!-- /container -->
+    <hr>
+    <footer>
+        <p class="pull-right">
+            <?= $this->Html->link(__('GitHub Repository'), 'https://github.com/anuj9196/CakePHP-App-Installer') ?> &copy; <?= date('Y') ?><br />
+            <?= __('Developer <span class="glyphicon glyphicon-heart text-danger"></span> {0}', $this->Html->link('Anuj Sharma', 'http://profplus.in/anujsharma')) ?>
+        </p>
+        <p>
+            <?= __('Developed with the {0}.', $this->Html->link('CakePHP Framework', 'https://cakephp.org')) ?><br/>
+            <?= __('Designed with {0}.', $this->Html->link('Twitter Bootstrap', 'https://twitter.github.com/bootstrap/')) ?>
+        </p>
+    </footer>
+</div><!-- /container -->
 
 </body>
 </html>
