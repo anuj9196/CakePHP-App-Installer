@@ -11,10 +11,10 @@
                 <?= __('We are successfully connected to the database, click on the link below to construct it.') ?>
             </p>
             <p class="text-warning">
-                <?= __('Database Import may take time depending on size of the database. Please, do not close this window or refresh this page after clicking <b>Copy Schema</b> button below.') ?>
+                <?= __('Database Import may take time depending on size of the database. Please, do not close this window or refresh this page after clicking <b>Create Schema</b> button below.') ?>
             </p>
 
-            <?= $this->Form->postLink(__('Copy Schema').' <span class="glyphicon glyphicon-menu-right"></span>', ['plugin' => 'Installer', 'controller' => 'Install', 'action' => 'data'], ['class' => 'btn btn-primary', 'escape' => false]) ?>
+            <?= $this->Form->postLink(__('Create Schema').' <span class="glyphicon glyphicon-menu-right"></span>', ['plugin' => 'Installer', 'controller' => 'Install', 'action' => 'data'], ['class' => 'btn btn-primary', 'escape' => false]) ?>
         <?php else: ?>
             <div class="alert alert-danger">
                 <?= __('Database Connection could not be established') ?>
