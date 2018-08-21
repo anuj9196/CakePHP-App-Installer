@@ -83,53 +83,45 @@ class InstallController extends AppController
                  */
                 ConnectionManager::config('my_default', Configure::read('Installer.Connection'));
                 $db = ConnectionManager::get('my_default');
+                $db->connect();
 
-                try {
-                    $connected = $db->connect();
-                } catch (Exception $connectionError) {
-                    $connected = false;
-                    $this->Flash->error(__('Cannot connect to database: {0}', $connectionError->getMessage()));
-                }
+                /**
+                 * We will create the true database configuration file with our configuration
+                 */
+                $success = true;
+                $written = [];
+                foreach (Configure::read('Installer.Files') as $key => $config) {
+                    if ($config['use'] && !file_exists(CONFIG . $config['filename'])) {
+                        $input = new File($config['default']);
+                        $content = $input->read();
+                        foreach (Configure::read('Installer.Connection') as $k => $v) {
+                            $content = str_replace('{default_' . $k . '}', $v, $content);
+                        }
 
-                if ($connected) {
-                    /**
-                     * We will create the true database configuration file with our configuration
-                     */
-                    $success = true;
-                    $written = [];
-                    foreach (Configure::read('Installer.Files') as $key => $config) {
-                        if ($config['use'] && !file_exists(CONFIG . $config['filename'])) {
-                            $input = new File($config['default']);
-                            $content = $input->read();
-                            foreach (Configure::read('Installer.Connection') as $k => $v) {
-                                $content = str_replace('{default_' . $k . '}', $v, $content);
-                            }
-
-                            $output = new File(CONFIG . $config['filename']);
-                            if ($output->write($content)) {
-                                $written[] = $output;
-                            } else {
-                                $this->Flash->error(__('{0} file cannot be modified', $config['filename']));
-                                $success = false;
-                                break;
-                            }
+                        $output = new File(CONFIG . $config['filename']);
+                        if ($output->write($content)) {
+                            $written[] = $output;
+                        } else {
+                            $this->Flash->error(__('{0} file cannot be modified', $config['filename']));
+                            $success = false;
+                            break;
                         }
                     }
+                }
 
-                    if ($success) {
-                        $this->Flash->success(__('Connected to the database'));
+                if ($success) {
+                    $this->Flash->success(__('Connected to the database'));
 
-                        // import database if import_database is checked
-                        if ($import_database) {
-                            $this->redirect(['action' => 'data']);
-                        } else {
-                            $this->redirect(['action' => 'finish']);
-                        }
+                    // import database if import_database is checked
+                    if ($import_database) {
+                        $this->redirect(['action' => 'data']);
                     } else {
-                        // Remove any config files that were written successfully, so that we try them again next time.
-                        foreach ($written as $file) {
-                            $file->delete();
-                        }
+                        $this->redirect(['action' => 'finish']);
+                    }
+                } else {
+                    // Remove any config files that were written successfully, so that we try them again next time.
+                    foreach ($written as $file) {
+                        $file->delete();
                     }
                 }
             } catch (MissingConnectionException $e) {
@@ -155,33 +147,16 @@ class InstallController extends AppController
 
         // connection to the database
         try {
-            $database_connect = $db->connect();
+            $db->connect();
+            $this->set(['database_connect' => true]);
+
+            if ($this->request->is('post') && $this->_importSchema($db) && $this->_handleMigrations()) {
+                $this->Flash->success(__('Database imported'));
+                $this->redirect(array('action' => 'finish'));
+            }
         } catch (Exception $connectionError) {
-            $database_connect = false;
+            $this->set(['database_connect' => false]);
             $this->Flash->error(__('Can not connect to database: {0}', $connectionError->getMessage()));
-        }
-
-        $this->set(compact('database_connect'));
-
-        if ($this->request->is('post')) {
-
-            $db = ConnectionManager::get('default');
-
-            // connection to the database
-            try {
-                $connected = $db->connect();
-            } catch (Exception $connectionError) {
-                $connected = false;
-                $this->Flash->error(__('Can not connect to database: {0}', $connectionError->getMessage()));
-            }
-
-            // connection to the database
-            if ($connected) {
-                if ($this->_importSchema($db) && $this->_handleMigrations()) {
-                    $this->Flash->success(__('Database imported'));
-                    $this->redirect(array('action' => 'finish'));
-                }
-            }
         }
 
         $this->set($d);

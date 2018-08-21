@@ -16,19 +16,14 @@ class InstallComponent extends Component
 
     public function installationCheck()
     {
-
         // check for installation of database configuration
 
         // first check for database connection using default connection
         // connection to the database
         try {
             $connection = ConnectionManager::get('default');
-            $connected = $connection->connect();
+            $connection->connect();
         } catch (\Exception $connectionError) {
-            $connected = false;
-        }
-
-        if ($connected === false) {
             if (Configure::read('Database.installed') == true) {
                 // if database connection not established
                 // and Database.installed is set to TRUE
