@@ -77,6 +77,15 @@ class InstallController extends AppController
                 }
             }
 
+            // add some extra bits and pieces that may be helpful
+            $salt = '';
+            $salt_chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            for ($i = 0; $i < 40; ++ $i) {
+                $salt .= $salt_chars[mt_rand(0, strlen($salt_chars) - 1)];
+            }
+            Configure::write('Installer.Connection.salt', $salt);
+            Configure::write('Installer.Connection.baseurl', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
+
             try {
                 /**
                  * Try to connect the database with the new configuration
