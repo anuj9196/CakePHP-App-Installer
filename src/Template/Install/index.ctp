@@ -39,7 +39,8 @@ $check = true;
         ?>
 
         <?php
-        $settings = Cache::config('_cake_core_');
+//        $settings = Cache::config('_cake_core_');
+        $settings = Cache::getConfig('_cake_core_');
         if (!empty($settings)):
             $class = 'success';
             $glyphicon = 'ok';
