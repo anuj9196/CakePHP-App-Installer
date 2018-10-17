@@ -1,9 +1,9 @@
 # Installer plugin for CakePHP
 
 ## Version/Update
- **Current Version:** v1.1.4
+ **Current Version:** v2.0.0
  
- **Last Update:** May 20, 2017
+ **Last Update:** October 17, 2018
  
  **Releases:** [Releases](https://github.com/anuj9196/CakePHP-App-Installer/releases)
 
