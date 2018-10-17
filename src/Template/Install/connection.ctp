@@ -33,6 +33,18 @@ use \Cake\Core\Configure;
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="change_salt"><?= __('Change Salt') ?></label>
+                <div class="col-sm-8">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value="1" name="change_salt">
+                            <?= __('Change Salt') ?>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
 <?php if (Configure::read('Installer.Import.ask')): ?>
             <div class="form-group">
                 <label class="control-label col-sm-4" for="migrate_database"><?= __('Import Database File?') ?></label>
