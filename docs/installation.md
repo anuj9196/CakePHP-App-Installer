@@ -32,7 +32,7 @@ try {
 add following lines
 ```
 try {
-    Configure::load('database_config', 'default');
+    Configure::load('database', 'default');
 } catch (\Exception $e) {
 
 }
