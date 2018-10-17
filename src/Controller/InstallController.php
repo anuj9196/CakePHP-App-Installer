@@ -36,7 +36,8 @@ class InstallController extends AppController
     protected function _check(){
         if (Configure::read('Database.installed') == true) {
             $this->Flash->success(__('Website already configured'));
-            $this->redirect('/');
+            // Removing redirect to allow user to re-configure application manually
+//            $this->redirect('/');
         }
     }
 
@@ -64,33 +65,38 @@ class InstallController extends AppController
         $d['title_for_layout'] = __('Database Connection Setup');
 
         if ($this->request->is('post')) {
-            // loads form data
-            $data = $this->request->data();
+            // Loads post form data
+            $data = $this->request->getData();
 
-            // check if import_database is checked
-            $import_database = $this->request->data('import_database') || Configure::read('Installer.Import.migrations');
+            // Check if import_database is checked
+            $import_database = $this->request->getData('import_database') || Configure::read('Installer.Import.migrations');
 
-            // replaces default config by form data
+            // Replaces default config by form data
             foreach ($data as $k => $v) {
                 if (isset($data[$k])) {
                     Configure::write("Installer.Connection.$k", $v);
                 }
             }
 
-            // add some extra bits and pieces that may be helpful
+            // Add some extra bits and pieces that may be helpful
+            // Generate salt and base url to add to app.php
             $salt = '';
             $salt_chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
             for ($i = 0; $i < 40; ++ $i) {
                 $salt .= $salt_chars[mt_rand(0, strlen($salt_chars) - 1)];
             }
             Configure::write('Installer.Connection.salt', $salt);
+
+            /**
+             * TODO: Replacement for full base url is still to be configured based on user's choice, help needed
+             */
             Configure::write('Installer.Connection.baseurl', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
 
             try {
                 /**
                  * Try to connect the database with the new configuration
                  */
-                ConnectionManager::config('my_default', Configure::read('Installer.Connection'));
+                ConnectionManager::setConfig('my_default', Configure::read('Installer.Connection'));
                 $db = ConnectionManager::get('my_default');
                 $db->connect();
 
@@ -99,15 +105,60 @@ class InstallController extends AppController
                  */
                 $success = true;
                 $written = [];
+
                 foreach (Configure::read('Installer.Files') as $key => $config) {
-                    if ($config['use'] && !file_exists(CONFIG . $config['filename'])) {
+                    /**
+                     * Each $config have data in following format
+                     * [
+                     *     'use' => true|false,                    # whether true or false, use only if true
+                     *     'filename' => app.php,                  # new file name to save with inside config directory
+                     *     'default' => '/path/to/default/file'    # default file to read content from
+                     * ]
+                     *
+                     */
+                    if ($config['use'] && file_exists( $config['default'])) {
+
+                        /**
+                         * If change_salt is not checked, skip modifying app.php file
+                         */
+                        if (!key_exists('change_salt', $data) || !$data['change_salt']) {
+                            if ($config['filename'] === 'app.php') {
+                                continue;
+                            }
+                        }
+
+                        // Object of default file
                         $input = new File($config['default']);
+                        // Read default file content
                         $content = $input->read();
+
+                        /**
+                         * Replace database configurations
+                         * This will generate new configuration file database.php with contents from
+                         * database.php.install from plugin config path
+                         */
                         foreach (Configure::read('Installer.Connection') as $k => $v) {
                             $content = str_replace('{default_' . $k . '}', $v, $content);
                         }
 
+                        /**
+                         * Replace SALF if possible
+                         * This will replace __SALT__ from app.default.php to new app.php
+                         */
+                        if (key_exists('change_salt', $data) && $data['change_salt']) {
+                            $content = str_replace('__SALT__', Configure::read('Installer.Connection.salt'), $content);
+
+                            $this->Flash->success('Salt Value changed');
+                        }
+
+                        /**
+                         * Output file object
+                         */
                         $output = new File(CONFIG . $config['filename']);
+
+                        /**
+                         * Write output file content to new file
+                         */
                         if ($output->write($content)) {
                             $written[] = $output;
                         } else {
@@ -121,7 +172,7 @@ class InstallController extends AppController
                 if ($success) {
                     $this->Flash->success(__('Connected to the database'));
 
-                    // import database if import_database is checked
+                    // Import database if import_database is checked
                     if ($import_database) {
                         $this->redirect(['action' => 'data']);
                     } else {
@@ -138,9 +189,9 @@ class InstallController extends AppController
             } catch(Exception $e) {
                 $this->Flash->error(__('Cannot connect to the database: {0}', $e->getMessage()));
             }
-        } // post
+        } // Post
         $this->set($d);
-    } //function
+    } // Function
 
     /**
     * STEP 3 - DATABASE CONSTRUCTION
