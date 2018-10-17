@@ -15,7 +15,7 @@ class AppController extends BaseController
          try {
              return parent::beforeRender($event);
          } finally {
-             $this->viewBuilder()->theme(null);
+             $this->viewBuilder()->setTheme(null);
          }
     }
 }
