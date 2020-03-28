@@ -233,7 +233,7 @@ class InstallController extends AppController
         $d['title_for_layout'] = __('Installation Complete');
 
         if (!$this->_changeConfiguration()){
-            $this->Flash->error(__('Cannot modify Database.installed variable in /plugins/Installer/config/bootstrap.php; you must manually update this to true to prevent a later install from overwriting your configuration!'));
+            $this->Flash->error(__('Cannot modify Database.installed variable in {0}bootstrap.php; you must manually update this to true to prevent a later install from overwriting your configuration!', PLUGIN_CONFIG));
         }
 
         $this->set($d);
