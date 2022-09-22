@@ -1,7 +1,8 @@
 <?php
-namespace Installer\Controller;
+namespace CakePHPAppInstaller\Controller;
 
 use Cake\Database\Exception\MissingConnectionException;
+use Cake\Event\EventInterface;
 use Exception;
 use Cake\Event\Event;
 use Cake\Core\Configure;
@@ -21,7 +22,7 @@ class InstallController extends AppController
      * @param Event $event
      * @return void
      */
-    public function beforeFilter(Event $event) {
+    public function beforeFilter(EventInterface $event) {
         parent::beforeFilter($event);
         $this->loadComponent('Auth');
         $this->Auth->allow();

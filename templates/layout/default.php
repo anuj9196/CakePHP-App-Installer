@@ -28,15 +28,11 @@ $cakeDescription = __('Cake App Installer');
     <meta name="author" content="">
     <?php
     echo $this->Html->meta('icon');
-    echo $this->Html->css('Installer.bootstrap.min.css');
+    echo $this->Html->css('CakePHPAppInstaller.bootstrap.min.css');
     echo $this->fetch('meta');
     echo $this->fetch('css');
-?>
+    ?>
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
 </head>
 
 <body>
@@ -44,7 +40,8 @@ $cakeDescription = __('Cake App Installer');
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only"><?= __('Toggle navigation') ?></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -66,7 +63,8 @@ $cakeDescription = __('Cake App Installer');
     <hr>
     <footer>
         <p class="pull-right">
-            <?= $this->Html->link(__('GitHub Repository'), 'https://github.com/anuj9196/CakePHP-App-Installer') ?> &copy; <?= date('Y') ?><br />
+            <?= $this->Html->link(__('GitHub Repository'), 'https://github.com/anuj9196/CakePHP-App-Installer') ?>
+            &copy; <?= date('Y') ?><br/>
             <?= __('Developer <span class="glyphicon glyphicon-heart text-danger"></span> {0}', $this->Html->link('Anuj Sharma', 'http://profplus.in/anujsharma')) ?>
         </p>
         <p>

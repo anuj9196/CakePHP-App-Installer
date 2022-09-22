@@ -11,7 +11,7 @@ use Cake\Core\Configure;
  */
     Configure::write('Database.installed', false);
 
-    Configure::load('Installer.defaults');
+    Configure::load('CakePHPAppInstaller.defaults');
     collection((array)Configure::read('Installer.config'))->each(function ($file) {
         Configure::load($file);
     });

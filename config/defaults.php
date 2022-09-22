@@ -1,11 +1,14 @@
 <?php
 // Default settings for the installer
+use Cake\Database\Driver\Mysql;
+use Cake\Database\Connection;
+
 return [
     'Installer' => [
         // Default database connection settings
         'Connection' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'className' => Connection::class,
+            'driver' => Mysql::class,
             'persistent' => false,
             'host' => 'localhost',
             'username' => 'root',

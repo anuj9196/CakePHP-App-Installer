@@ -1,8 +1,7 @@
 <?php
-namespace Installer\Controller\Component;
+namespace CakePHPAppInstaller\Controller\Component;
 
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
 use Cake\Datasource\ConnectionManager;
 use Cake\Core\Configure;
 use Cake\Filesystem\File;
@@ -36,14 +35,14 @@ class InstallComponent extends Component
                 if (!$this->_changeConfiguration()){
                     $this->Flash->error(__('Cannot modify Database.installed variable in {0}bootstrap.php; you must manually update this to true to prevent a later install from overwriting your configuration!', PLUGIN_CONFIG));
                 }
-                return $this->_registry->getController()->redirect(['plugin' => 'Installer', 'controller' => 'Install', 'action' => 'index']);
+                return $this->_registry->getController()->redirect(['plugin' => 'CakePHPAppInstaller', 'controller' => 'Install', 'action' => 'index']);
             } else {
                 // if database connection not established
                 // and Database.installed is not TRUE
                 // this could be the cause that Database configuration has not been made yet
                 // ask user to setup database configuration
                 $this->Flash->error(__('Please configure your database settings for working of your application'));
-                return $this->_registry->getController()->redirect(['plugin' => 'Installer', 'controller' => 'Install', 'action' => 'index']);
+                return $this->_registry->getController()->redirect(['plugin' => 'CakePHPAppInstaller', 'controller' => 'Install', 'action' => 'index']);
             }
         }
 
