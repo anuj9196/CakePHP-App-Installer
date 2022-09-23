@@ -4,6 +4,6 @@
  * @var mixed $message
  */
 ?>
-<div class="alert alert-danger">
+<div class="alert alert-danger" role="alert">
     <?= h($message) ?>
 </div>

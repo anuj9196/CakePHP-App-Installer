@@ -6,76 +6,93 @@
 use Cake\Core\Configure;
 
 ?>
-<div class="jumbotron">
+<div class="mt-4 p-3 bg-light rounded">
     <h2><?= __('Database Connection Setup') ?></h2>
 </div>
 
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <?= $this->Form->create(null, ['class' => 'form-horizontal']) ?>
-        <div class="form-group">
-            <label class="control-label col-sm-4" for="host"><?= __('Host') ?> <span
-                        class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top"
-                        title="<?= __('Host Name or IP Address') ?>"></span></label>
-            <div class="col-sm-8">
-                <?= $this->Form->control('host', ['label' => false, 'value' => Configure::read('Installer.Connection.host'), 'class' => 'form-control', 'placeholder' => __('Host')]) ?>
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <?= $this->Form->create() ?>
+
+        <div class="row align-items-center my-3">
+            <div class="col-3">
+                <label for="host" class="col-form-label"><?= __('Host') ?></label>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-4" for="username"><?= __('Username') ?> <span
-                        class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top"
-                        title="<?= __('Database connection login') ?>"></span></label>
-            <div class="col-sm-8">
-                <?= $this->Form->control('username', ['label' => false, 'value' => Configure::read('Installer.Connection.username'), 'class' => 'form-control', 'placeholder' => __('Datebase Username')]) ?>
+            <div class="col-5">
+                <?= $this->Form->control('host', ['label' => false, 'value' => Configure::read('Installer.Connection.host'), 'class' => 'form-control', 'placeholder' => __('Host'), 'aria-describedby' => 'passwordHelpInline']) ?>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-4" for="password"><?= __('Password') ?> <span
-                        class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top"
-                        title="<?= __('Database connection password') ?>"></span></label>
-            <div class="col-sm-8">
-                <?= $this->Form->control('password', ['type' => 'password', 'label' => false, 'value' => '', 'class' => 'form-control', 'placeholder' => __('Password (leave blank, if no password)')]) ?>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-sm-4" for="database"><?= __('Database Name') ?> <span
-                        class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="top"
-                        title="<?= __('Database must have been created') ?>"></span></label>
-            <div class="col-sm-8">
-                <?= $this->Form->control('database', ['label' => false, 'value' => Configure::read('Installer.Connection.database'), 'class' => 'form-control', 'placeholder' => __('Database Name')]) ?>
+            <div class="col-4">
+                <span id="passwordHelpInline" class="form-text">
+                  <?= __('Host Name or IP Address') ?>
+                </span>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-sm-4" for="change_salt"><?= __('Change Salt') ?></label>
-            <div class="col-sm-8">
+        <div class="row align-items-center my-3">
+            <div class="col-3">
+                <label for="username" class="col-form-label"><?= __('Username') ?></label>
+            </div>
+            <div class="col-5">
+                <?= $this->Form->control('username', ['label' => false, 'value' => Configure::read('Installer.Connection.username'), 'class' => 'form-control', 'placeholder' => __('Database Username'), 'aria-describedby' => 'usernameHelpInline']) ?>
+            </div>
+            <div class="col-4">
+                <span id="usernameHelpInline" class="form-text">
+                  <?= __('Database connection login') ?>
+                </span>
+            </div>
+        </div>
+
+        <div class="row align-items-center my-3">
+            <div class="col-3">
+                <label for="password" class="col-form-label"><?= __('Password') ?></label>
+            </div>
+            <div class="col-5">
+                <?= $this->Form->control('password', ['type' => 'password', 'label' => false, 'value' => '', 'class' => 'form-control', 'placeholder' => __('Password (leave blank, if no password)'), 'aria-describedby' => 'passwordHelpInline']) ?>
+            </div>
+            <div class="col-4">
+                <span id="passwordHelpInline" class="form-text">
+                  <?= __('Database connection password') ?>
+                </span>
+            </div>
+        </div>
+
+        <div class="row align-items-center my-3">
+            <div class="col-3">
+                <label for="database" class="col-form-label"><?= __('Database Name') ?></label>
+            </div>
+            <div class="col-5">
+                <?= $this->Form->control('database', ['label' => false, 'value' => Configure::read('Installer.Connection.database'), 'class' => 'form-control', 'placeholder' => __('Database Name'), 'databaseHelpInline']) ?>
+            </div>
+            <div class="col-4">
+                <span id="databaseHelpInline" class="form-text">
+                  <?= __('Database must have been created') ?>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group my-3">
                 <div class="form-check">
                     <label class="form-check-label">
                         <input class="form-check-input" type="checkbox" value="1" name="change_salt">
                         <?= __('Change Salt') ?>
                     </label>
-                </div>
             </div>
         </div>
 
         <?php if (Configure::read('Installer.Import.ask')): ?>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="migrate_database"><?= __('Import Database File?') ?></label>
-                <div class="col-sm-8">
+            <div class="form-group my-3">
                     <div class="form-check">
                         <label class="form-check-label">
                             <input class="form-check-input" type="checkbox" value="1" name="import_database">
-                            <?= __('Import Database') ?>
+                            <?= __('Import Database File?') ?>
                         </label>
                     </div>
-                </div>
             </div>
 
-            <div class="panel panel-danger">
-                <div class="panel-body">
-                    <h4><strong><?= __('NOTE:') ?></strong></h4>
-                    <p><?= __('If you have <strong>checked</strong> <i>Import Database</i> field, make sure the <i><b>config/{0}</b></i> file exists. Otherwise it will throw an error.', Configure::read('Installer.Import.schema')) ?></p>
-                </div>
+            <div class="card card-body bg-light my-3">
+                <h4><strong><?= __('NOTE:') ?></strong></h4>
+                <p><?= __('If you have <strong>checked</strong> <i>Import Database</i> field, make sure the <i><b>config/{0}</b></i> file exists. Otherwise it will throw an error.',
+                        Configure::read('Installer.Import.schema')) ?></p>
             </div>
         <?php endif; ?>
 

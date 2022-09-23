@@ -30,51 +30,42 @@ $cakeDescription = __('Cake App Installer');
     <meta name="author" content="">
     <?php
     echo $this->Html->meta('icon');
-    echo $this->Html->css('CakePHPAppInstaller.bootstrap.min.css');
     echo $this->fetch('meta');
     echo $this->fetch('css');
     ?>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+          crossorigin="anonymous">
 </head>
 
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only"><?= __('Toggle navigation') ?></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#"><?= $cakeDescription ?></a>
-        </div>
-
-    </div><!-- /.container-fluid -->
+        <a class="navbar-brand" href="#"><?= $cakeDescription ?></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
 </nav>
 
 <div class="container">
 
     <?= $this->Flash->render() ?>
-    <!-- nocache -->
 
     <?= $this->fetch('content') ?>
 
     <hr>
     <footer>
-        <p class="pull-right">
-            <?= $this->Html->link(__('GitHub Repository'), 'https://github.com/anuj9196/CakePHP-App-Installer') ?>
-            &copy; <?= date('Y') ?><br/>
-            <?= __('Developer <span class="glyphicon glyphicon-heart text-danger"></span> {0}', $this->Html->link('Anuj Sharma', 'http://profplus.in/anujsharma')) ?>
+        <p class="float-end">
+            <?= $this->Html->link(__('GitHub Repository'), 'https://github.com/umer936/CakePHP-App-Installer') ?>
+            &copy; <?= date('Y') ?>
         </p>
         <p>
             <?= __('Developed with the {0}.', $this->Html->link('CakePHP Framework', 'https://cakephp.org')) ?><br/>
-            <?= __('Designed with {0}.', $this->Html->link('Twitter Bootstrap', 'https://twitter.github.com/bootstrap/')) ?>
+            <?= __('Designed with {0}.', $this->Html->link('Bootstrap', 'https://getbootstrap.com/')) ?>
         </p>
     </footer>
-</div><!-- /container -->
-
+</div>
 </body>
 </html>

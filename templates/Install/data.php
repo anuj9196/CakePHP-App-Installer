@@ -4,7 +4,7 @@
  * @var mixed $database_connect
  */
 ?>
-<div class="jumbotron">
+<div class="mt-4 p-3 bg-light rounded">
     <h2><?= __('Database Construction') ?></h2>
 </div>
 
@@ -28,5 +28,5 @@
             <h4 class="text-warning"><?= __('Re-run the connection wizard or check for database connection manually') ?></h4>
             <?= $this->Html->link(__('Re-run Connection Wizard') . ' <span class="glyphicon glyphicon-menu-right"></span>', ['action' => 'connection'], ['class' => 'btn btn-primary', 'escape' => false]) ?>
         <?php endif; ?>
-    </div> <!-- .span12 -->
-</div> <!-- .row -->
+    </div>
+</div>
