@@ -91,7 +91,8 @@ class InstallController extends AppController
             /**
              * TODO: Replacement for full base url is still to be configured based on user's choice, help needed
              */
-            Configure::write('Installer.Connection.baseurl', "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}");
+            $request_scheme = isset($_SERVER['HTTPS']) ? 'https' : 'http';
+            Configure::write('Installer.Connection.baseurl', "$request_scheme://{$_SERVER['HTTP_HOST']}");
 
             try {
                 /**
