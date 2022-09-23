@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ */
 
 use Cake\Cache\Cache;
 
@@ -39,7 +42,6 @@ $check = true;
         ?>
 
         <?php
-        //        $settings = Cache::config('_cake_core_');
         $settings = Cache::getConfig('_cake_core_');
         if (!empty($settings)):
             $class = 'success';

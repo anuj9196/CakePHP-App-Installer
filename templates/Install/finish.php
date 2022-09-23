@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ */
+?>
 <div class="jumbotron">
     <h2><?= __('Installation complete!') ?></h2>
 </div>

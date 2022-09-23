@@ -8,6 +8,8 @@ use Cake\Filesystem\File;
 
 /**
  * Install component
+ *
+ * @property \Cake\Controller\Component\FlashComponent $Flash
  */
 class InstallComponent extends Component
 {

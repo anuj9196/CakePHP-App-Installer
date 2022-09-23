@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var mixed $database_connect
+ */
+?>
 <div class="jumbotron">
     <h2><?= __('Database Construction') ?></h2>
 </div>
