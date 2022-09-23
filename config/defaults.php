@@ -35,7 +35,7 @@ return [
             'database_php' => [
                 'use' => true,
                 'filename' => 'database.php',
-                'default' => PLUGIN_CONFIG . 'database.php.install',
+                'default' => PLUGIN_CONFIG . 'database_install.php',
             ],
 
             // These are common optional config files. If you use them, you must provide your own

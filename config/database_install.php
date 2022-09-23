@@ -1,9 +1,13 @@
 <?php
+
+use Cake\Database\Driver\Mysql;
+use Cake\Database\Connection;
+
 return [
     'Datasources' => [
         'default' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'className' => Connection::class,
+            'driver' => Mysql::class,
             'persistent' => false,
             'host' => '{default_host}',
             /**
