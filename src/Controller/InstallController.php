@@ -1,4 +1,5 @@
 <?php
+
 namespace CakePHPAppInstaller\Controller;
 
 use Cake\Database\Exception\MissingConnectionException;
@@ -11,8 +12,8 @@ use Cake\Filesystem\File;
 use Migrations\Migrations;
 
 /**
-* Install Controller
-*/
+ * Install Controller
+ */
 class InstallController extends AppController
 {
     /**
@@ -21,47 +22,52 @@ class InstallController extends AppController
      * @access public
      * @param Event $event
      * @return void
+     * @throws \Exception
      */
-    public function beforeFilter(EventInterface $event) {
+    public function beforeFilter(EventInterface $event)
+    {
         parent::beforeFilter($event);
         $this->loadComponent('Auth');
         $this->Auth->allow();
     }
 
     /**
-    * Check wheter the installation file already exists
-    *
-    * @access	public
-    * @return	void
-    */
-    protected function _check(){
-        if (Configure::read('Database.installed') == true) {
-            $this->Flash->success(__('Website already configured'));
-            // Removing redirect to allow user to re-configure application manually
-//            $this->redirect('/');
-        }
-    }
-
-
-    /**
-    * STEP 1 - CONFIGURATION TEST
-    *
-    * @access	public
-    * @return	void
-    */
-    public function index() {
+     * STEP 1 - CONFIGURATION TEST
+     *
+     * @access    public
+     * @return    void
+     */
+    public function index()
+    {
         $this->_check();
         $d['title_for_layout'] = __('Configuration Check');
         $this->set($d);
     }
 
     /**
-    * STEP 2 - DATABASE CONNECTION TEST
-    *
-    * @access	public
-    * @return	void
-    */
-    public function connection() {
+     * Check wheter the installation file already exists
+     *
+     * @access    public
+     * @return    void
+     */
+    protected function _check()
+    {
+        if (Configure::read('Database.installed')) {
+            $this->Flash->success(__('Website already configured'));
+            // Removing redirect to allow user to re-configure application manually
+//            $this->redirect('/');
+        }
+    }
+
+    /**
+     * STEP 2 - DATABASE CONNECTION TEST
+     *
+     * @access    public
+     * @return    void
+     * @throws \Exception
+     */
+    public function connection()
+    {
         $this->_check();
         $d['title_for_layout'] = __('Database Connection Setup');
 
@@ -74,7 +80,7 @@ class InstallController extends AppController
 
             // Replaces default config by form data
             foreach ($data as $k => $v) {
-                if (isset($data[$k])) {
+                if (isset($v)) {
                     Configure::write("Installer.Connection.$k", $v);
                 }
             }
@@ -83,8 +89,8 @@ class InstallController extends AppController
             // Generate salt and base url to add to app.php
             $salt = '';
             $salt_chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-            for ($i = 0; $i < 40; ++ $i) {
-                $salt .= $salt_chars[mt_rand(0, strlen($salt_chars) - 1)];
+            for ($i = 0; $i < 40; ++$i) {
+                $salt .= $salt_chars[random_int(0, strlen($salt_chars) - 1)];
             }
             Configure::write('Installer.Connection.salt', $salt);
 
@@ -108,7 +114,7 @@ class InstallController extends AppController
                 $success = true;
                 $written = [];
 
-                foreach (Configure::read('Installer.Files') as $key => $config) {
+                foreach (Configure::read('Installer.Files') as $config) {
                     /**
                      * Each $config have data in following format
                      * [
@@ -118,15 +124,13 @@ class InstallController extends AppController
                      * ]
                      *
                      */
-                    if ($config['use'] && file_exists( $config['default'])) {
+                    if ($config['use'] && file_exists($config['default'])) {
 
                         /**
                          * If change_salt is not checked, skip modifying app.php file
                          */
-                        if (!key_exists('change_salt', $data) || !$data['change_salt']) {
-                            if ($config['filename'] === 'app.php') {
-                                continue;
-                            }
+                        if ((!array_key_exists('change_salt', $data) || !$data['change_salt']) && $config['filename'] === 'app.php') {
+                            continue;
                         }
 
                         // Object of default file
@@ -144,10 +148,10 @@ class InstallController extends AppController
                         }
 
                         /**
-                         * Replace SALF if possible
+                         * Replace SALT if possible
                          * This will replace __SALT__ from app.default.php to new app.php
                          */
-                        if (key_exists('change_salt', $data) && $data['change_salt']) {
+                        if (array_key_exists('change_salt', $data) && $data['change_salt']) {
                             $content = str_replace('__SALT__', Configure::read('Installer.Connection.salt'), $content);
 
                             $this->Flash->success('Salt Value changed');
@@ -188,7 +192,7 @@ class InstallController extends AppController
                 }
             } catch (MissingConnectionException $e) {
                 $this->Flash->error($e->getMessage());
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 $this->Flash->error(__('Cannot connect to the database: {0}', $e->getMessage()));
             }
         } // Post
@@ -196,12 +200,13 @@ class InstallController extends AppController
     } // Function
 
     /**
-    * STEP 3 - DATABASE CONSTRUCTION
-    *
-    * @access	public
-    * @return	void
-    */
-    public function data() {
+     * STEP 3 - DATABASE CONSTRUCTION
+     *
+     * @access    public
+     * @return    void
+     */
+    public function data()
+    {
         $this->_check();
         $d['title_for_layout'] = __('Database Construction');
 
@@ -214,7 +219,7 @@ class InstallController extends AppController
 
             if ($this->request->is('post') && $this->_importSchema($db) && $this->_handleMigrations()) {
                 $this->Flash->success(__('Database imported'));
-                $this->redirect(array('action' => 'finish'));
+                $this->redirect(['action' => 'finish']);
             }
         } catch (Exception $connectionError) {
             $this->set(['database_connect' => false]);
@@ -225,43 +230,11 @@ class InstallController extends AppController
     } // function
 
     /**
-    * STEP 4 - INSTALLATION COMPLETE
-    *
-    * @access	public
-    * @return	void
-    */
-    public function finish() {
-        $this->_check();
-        $d['title_for_layout'] = __('Installation Complete');
-
-        if (!$this->_changeConfiguration()){
-            $this->Flash->error(__('Cannot modify Database.installed variable in {0}bootstrap.php; you must manually update this to true to prevent a later install from overwriting your configuration!', PLUGIN_CONFIG));
-        }
-
-        $this->set($d);
-    }
-
-    /**
-    * change Database.Installed to true
-    */
-    protected function _changeConfiguration() {
-        $path = PLUGIN_CONFIG.'bootstrap.php';
-
-        $file = new File($path);
-        $contents = $file->read();
-        $content_new = str_replace('false', 'true', $contents);
-        if ($file->write($content_new)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @access	protected
-     * @return	bool
+     * @access    protected
+     * @return    bool
      */
-    protected function _importSchema($db) {
+    protected function _importSchema($db)
+    {
         $schema = Configure::read('Installer.Import.schema');
         if (!$schema) {
             return true;
@@ -270,11 +243,13 @@ class InstallController extends AppController
         $sql_file = new File(CONFIG . $schema);
         if (!$sql_file->exists()) {
             $this->Flash->error(__('Schema file does not exists. Make sure /config{0} exists.', $schema));
+
             return false;
         }
 
-        if (!$sql_file->size() > 0) {
+        if ((!$sql_file->size()) > 0) {
             $this->Flash->error(__('It seems schema file is empty. Please check if schema exists at /config{0}', $schema));
+
             return false;
         }
 
@@ -283,6 +258,7 @@ class InstallController extends AppController
         // TODO: Perhaps support Cake's schema-dump-default.lock JSON format?
         if (!$db->execute($sql_content)) {
             $this->Flash->error(__('Database Import Failed'));
+
             return false;
         }
 
@@ -290,10 +266,11 @@ class InstallController extends AppController
     }
 
     /**
-     * @access	protected
-     * @return	bool
+     * @access    protected
+     * @return    bool
      */
-    protected function _handleMigrations() {
+    protected function _handleMigrations()
+    {
         if (!Configure::read('Installer.Import.migrations')) {
             return true;
         }
@@ -314,11 +291,44 @@ class InstallController extends AppController
             if ($post_migrate) {
                 $post_migrate($this, $migrations);
             }
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->Flash->error(__('Database Import Failed: {0}', $ex->getMessage()));
+
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * STEP 4 - INSTALLATION COMPLETE
+     *
+     * @access    public
+     * @return    void
+     */
+    public function finish()
+    {
+        $this->_check();
+        $d['title_for_layout'] = __('Installation Complete');
+
+        if (!$this->_changeConfiguration()) {
+            $this->Flash->error(__('Cannot modify Database.installed variable in {0}bootstrap.php; you must manually update this to true to prevent a later install from overwriting your configuration!', PLUGIN_CONFIG));
+        }
+
+        $this->set($d);
+    }
+
+    /**
+     * change Database.Installed to true
+     */
+    protected function _changeConfiguration()
+    {
+        $path = PLUGIN_CONFIG . 'bootstrap.php';
+
+        $file = new File($path);
+        $contents = $file->read();
+        $content_new = str_replace('false', 'true', $contents);
+
+        return $file->write($content_new);
     }
 }
