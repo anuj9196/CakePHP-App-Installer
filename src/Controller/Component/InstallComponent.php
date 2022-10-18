@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace CakePHPAppInstaller\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Datasource\ConnectionManager;
 use Cake\Core\Configure;
-use Cake\Filesystem\File;
 
 /**
  * Install component
@@ -57,10 +58,9 @@ class InstallComponent extends Component
     protected function _changeConfiguration() {
         $path = PLUGIN_CONFIG.'bootstrap.php';
 
-        $file = new File($path);
-        $contents = $file->read();
-        $content_new = str_replace('true', 'false', $contents);
+        $file = file_get_contents($path);
+        $content_new = str_replace('true', 'false', $file);
 
-        return $file->write($content_new);
+        return file_put_contents($content_new, $content_new);
     }
 }

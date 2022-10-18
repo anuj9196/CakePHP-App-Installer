@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace CakePHPAppInstaller\Controller;
 
@@ -8,8 +9,8 @@ use Exception;
 use Cake\Event\Event;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
-use Cake\Filesystem\File;
 use Migrations\Migrations;
+use SplFileObject;
 
 /**
  * Install Controller
@@ -133,10 +134,8 @@ class InstallController extends AppController
                             continue;
                         }
 
-                        // Object of default file
-                        $input = new File($config['default']);
                         // Read default file content
-                        $content = $input->read();
+                        $content = file_get_contents($config['default']);
 
                         /**
                          * Replace database configurations
@@ -160,12 +159,12 @@ class InstallController extends AppController
                         /**
                          * Output file object
                          */
-                        $output = new File(CONFIG . $config['filename']);
+                        $output = CONFIG . $config['filename'];
 
                         /**
                          * Write output file content to new file
                          */
-                        if ($output->write($content)) {
+                        if (file_put_contents($output, $content)) {
                             $written[] = $output;
                         } else {
                             $this->Flash->error(__('{0} file cannot be modified', $config['filename']));
@@ -187,7 +186,7 @@ class InstallController extends AppController
                 } else {
                     // Remove any config files that were written successfully, so that we try them again next time.
                     foreach ($written as $file) {
-                        $file->delete();
+                        unlink($file);
                     }
                 }
             } catch (MissingConnectionException $e) {
@@ -240,21 +239,22 @@ class InstallController extends AppController
             return true;
         }
 
-        $sql_file = new File(CONFIG . $schema);
-        if (!$sql_file->exists()) {
+        $sql_file = new SplFileObject(CONFIG . $schema);
+        if (!$sql_file->isFile()) {
             $this->Flash->error(__('Schema file does not exists. Make sure /config{0} exists.', $schema));
 
             return false;
         }
 
-        if ((!$sql_file->size()) > 0) {
+        $file_size = $sql_file->getSize();
+        if ($file_size === false || $file_size <= 0) {
             $this->Flash->error(__('It seems schema file is empty. Please check if schema exists at /config{0}', $schema));
 
             return false;
         }
 
         // fetches all information of the tables of the schema file
-        $sql_content = $sql_file->read();
+        $sql_content = $sql_file->fread($file_size);
         // TODO: Perhaps support Cake's schema-dump-default.lock JSON format?
         if (!$db->execute($sql_content)) {
             $this->Flash->error(__('Database Import Failed'));
@@ -325,10 +325,9 @@ class InstallController extends AppController
     {
         $path = PLUGIN_CONFIG . 'bootstrap.php';
 
-        $file = new File($path);
-        $contents = $file->read();
-        $content_new = str_replace('false', 'true', $contents);
+        $file = file_get_contents($path);
+        $content_new = str_replace('false', 'true', $file);
 
-        return $file->write($content_new);
+        return file_put_contents($path, $content_new);
     }
 }
