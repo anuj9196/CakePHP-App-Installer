@@ -5,7 +5,7 @@
 
  **Last Update:** September 22, 2022
 
- **Releases:** [Releases](https://github.com/umer936/CakePHP-App-Installer/releases)
+ **Releases:** [Releases](https://github.com/anuj9196/CakePHP-App-Installer/releases)
 
 ## Requirements
 #### CakePHP: 4.3.0+
