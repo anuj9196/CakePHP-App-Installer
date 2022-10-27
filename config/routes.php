@@ -1,12 +1,15 @@
 <?php
+/**
+ * @var \Cake\Routing\RouteBuilder $routes
+ */
+
 use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 use Cake\Routing\Route\DashedRoute;
 
-Router::plugin(
-    'Installer',
+$routes->plugin(
+    'CakePHPAppInstaller',
     ['path' => '/installer'],
-    function (RouteBuilder $routes) {
+    static function (RouteBuilder $routes) {
         $routes->connect('/', ['controller' => 'Install', 'action' => 'index']);
         $routes->fallbacks(DashedRoute::class);
     }

@@ -2,13 +2,20 @@
     "name": "cakephp-app-installer/installer",
     "description": "GUI Installer Plugin for CakePHP",
     "type": "cakephp-plugin",
-    "keywords": ["cakephp", "cakephp-3.3", "cakephp-3", "app-installer", "installer", "CakePHP-GUI-Installer"],
+    "keywords": [
+        "cakephp",
+        "cakephp-4",
+        "app-installer",
+        "installer",
+        "CakePHP-GUI-Installer"
+    ],
     "homepage": "https://github.com/anuj9196/CakePHP-App-Installer",
     "require": {
-        "cakephp/cakephp": "^3.3"
+        "php": ">=7.2",
+        "cakephp/cakephp": "^4.3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7|^6.0"
+        "phpunit/phpunit": "@stable"
     },
     "license": "MIT",
     "authors": [
@@ -18,19 +25,18 @@
         }
     ],
     "support": {
-      "issues": "https://github.com/anuj9196/CakePHP-App-Installer/issues",
-      "source": "https://github.com/anuj9196/CakePHP-App-Installer"
+        "issues": "https://github.com/anuj9196/CakePHP-App-Installer/issues",
+        "source": "https://github.com/anuj9196/CakePHP-App-Installer"
     },
     "autoload": {
         "psr-4": {
-            "Installer\\": "src"
+            "CakePHPAppInstaller\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Installer\\Test\\": "tests",
-            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+            "CakePHPAppInstaller\\Test\\": "tests/",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }

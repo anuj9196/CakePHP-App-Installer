@@ -25,8 +25,8 @@ Plugin will autocheck for database configuration and let you re-configure databa
 Add following lines to your `beforeRender` function of **AppController.php**
 
 ```
-$this->loadComponent('Installer.Install');
-if ($this->request->params['plugin'] !== 'Installer') {
+$this->loadComponent('CakePHPAppInstaller.Install');
+if ($this->request->params['plugin'] !== 'CakePHPAppInstaller') {
    $this->Install->installationCheck();
 }
 ```
@@ -35,16 +35,16 @@ Your `beforeRender` function then looks like
 ```
     public function beforeRender(Event $event)
     {
-        $this->loadComponent('Installer.Install');
-        if ($this->request->params['plugin'] !== 'Installer') {
-            $this->Install->installationCheck();
+        $this->loadComponent('CakePHPAppInstaller.Install');
+        if ($this->request->params['plugin'] !== 'CakePHPAppInstaller') {
+            $this->CakePHPAppInstaller->installationCheck();
         }
         ...
         ...
         ...
     }
  ```
- 
+
  **That's it** Now whenever there is database connectivity failure, you will be asked to reconfigure your application.
 
 [< Importing Schema](import-schema.md) | [README](../README.md) | [Credits >](../README.md#credits)

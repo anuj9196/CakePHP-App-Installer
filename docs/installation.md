@@ -12,29 +12,26 @@ composer require cakephp-app-installer/installer
 #### Step 2:
 load Installer plugin to your CakePHP Application by adding below like to your **bootstrap.php** file inside */config* directory
 ```
-Plugin::load('Installer', ['bootstrap' => true, 'routes' => true]);
+Plugin::load('CakePHPAppInstaller', ['bootstrap' => true, 'routes' => true]);
 ```
 or from terminal
 ```
-bin/cake plugin load Installer -b -r
+bin/cake plugin load CakePHPAppInstaller
 ```
 
 ## Setup
 below following script inside **bootstrap.php** file in */config* directory
 ```
-try {
-    Configure::config('default', new PhpConfig());
-    Configure::load('app', 'default', false);
-} catch (\Exception $e) {
-    exit($e->getMessage() . "\n");
+if (file_exists(CONFIG . 'app_local.php')) {
+    Configure::load('app_local', 'default');
 }
+...
 ```
 add following lines
 ```
-try {
+...
+if (file_exists(CONFIG . 'database.php')) {
     Configure::load('database', 'default');
-} catch (\Exception $e) {
-
 }
 ```
 

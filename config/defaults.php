@@ -1,11 +1,14 @@
 <?php
 // Default settings for the installer
+use Cake\Database\Driver\Mysql;
+use Cake\Database\Connection;
+
 return [
     'Installer' => [
         // Default database connection settings
         'Connection' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'className' => Connection::class,
+            'driver' => Mysql::class,
             'persistent' => false,
             'host' => 'localhost',
             'username' => 'root',
@@ -32,7 +35,7 @@ return [
             'database_php' => [
                 'use' => true,
                 'filename' => 'database.php',
-                'default' => PLUGIN_CONFIG . 'database.php.install',
+                'default' => PLUGIN_CONFIG . 'database_install.php',
             ],
 
             // These are common optional config files. If you use them, you must provide your own

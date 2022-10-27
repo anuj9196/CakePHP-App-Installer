@@ -1,21 +1,19 @@
 <?php
-namespace Installer\Controller;
+declare(strict_types=1);
+
+namespace CakePHPAppInstaller\Controller;
 
 use App\Controller\AppController as BaseController;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 
 class AppController extends BaseController
 {
-   /**
-     * @param \Cake\Event\Event $event The beforeRender event.
-     * @return \Cake\Http\Response|null|void
-     */
-    public function beforeRender(Event $event)
+    public function beforeRender(EventInterface $event)
     {
-         try {
-             return parent::beforeRender($event);
-         } finally {
-             $this->viewBuilder()->setTheme(null);
-         }
+        try {
+            return parent::beforeRender($event);
+        } finally {
+            $this->viewBuilder()->setTheme(null);
+        }
     }
 }
