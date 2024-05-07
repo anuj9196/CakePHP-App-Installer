@@ -25,7 +25,7 @@ class InstallController extends AppController
      * @return void
      * @throws \Exception
      */
-    public function beforeFilter(EventInterface $event)
+    public function beforeFilter(EventInterface $event): void
     {
         parent::beforeFilter($event);
         $this->loadComponent('Auth');

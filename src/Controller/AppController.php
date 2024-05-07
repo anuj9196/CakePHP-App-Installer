@@ -8,10 +8,10 @@ use Cake\Event\EventInterface;
 
 class AppController extends BaseController
 {
-    public function beforeRender(EventInterface $event)
+    public function beforeRender(EventInterface $event): void
     {
         try {
-            return parent::beforeRender($event);
+            parent::beforeRender($event);
         } finally {
             $this->viewBuilder()->setTheme(null);
         }
