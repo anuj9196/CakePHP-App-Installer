@@ -98,15 +98,15 @@ $check = true;
     ?>
 
     <?php
-    if (version_compare(PHP_VERSION, '5.6.0') < 0) {
+    if (version_compare(PHP_VERSION, '7.4.0') < 0) {
         $check = false;
         $class = 'danger';
         $glyphicon = 'remove';
-        $message = __('Your PHP version must be equal or higher than 5.6.0 to use CakePHP (' . PHP_VERSION . ')');
+        $message = __('Your PHP version must be equal or higher than 7.4.0 to use CakePHP (' . PHP_VERSION . ')');
     } else {
         $class = 'success';
         $glyphicon = 'ok';
-        $message = __('Your PHP version is equal or higher than 5.6.0 to use CakePHP (' . PHP_VERSION . ')');
+        $message = __('Your PHP version is equal or higher than 7.4.0 to use CakePHP (' . PHP_VERSION . ')');
     }
 
     echo '<div class="alert alert-' . $class . '"><span class="glyphicon glyphicon-' . $glyphicon . '"></span> ' . $message . '</div>';

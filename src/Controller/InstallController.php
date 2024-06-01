@@ -25,7 +25,7 @@ class InstallController extends AppController
      * @return void
      * @throws \Exception
      */
-    public function beforeFilter(EventInterface $event)
+    public function beforeFilter(EventInterface $event): void
     {
         parent::beforeFilter($event);
         $this->loadComponent('Auth');
@@ -56,7 +56,7 @@ class InstallController extends AppController
         if (Configure::read('Database.installed')) {
             $this->Flash->success(__('Website already configured'));
             // Removing redirect to allow user to re-configure application manually
-//            $this->redirect('/');
+//            return $this->redirect('/');
         }
     }
 
@@ -75,6 +75,7 @@ class InstallController extends AppController
         if ($this->request->is('post')) {
             // Loads post form data
             $data = $this->request->getData();
+            unset($data['_Token']);
 
             // Check if import_database is checked
             $import_database = $this->request->getData('import_database') || Configure::read('Installer.Import.migrations');
@@ -179,9 +180,9 @@ class InstallController extends AppController
 
                     // Import database if import_database is checked
                     if ($import_database) {
-                        $this->redirect(['action' => 'data']);
+                        return $this->redirect(['action' => 'data']);
                     } else {
-                        $this->redirect(['action' => 'finish']);
+                        return $this->redirect(['action' => 'finish']);
                     }
                 } else {
                     // Remove any config files that were written successfully, so that we try them again next time.
@@ -218,7 +219,7 @@ class InstallController extends AppController
 
             if ($this->request->is('post') && $this->_importSchema($db) && $this->_handleMigrations()) {
                 $this->Flash->success(__('Database imported'));
-                $this->redirect(['action' => 'finish']);
+                return $this->redirect(['action' => 'finish']);
             }
         } catch (Exception $connectionError) {
             $this->set(['database_connect' => false]);
