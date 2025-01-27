@@ -144,7 +144,10 @@ class InstallController extends AppController
                          * database.php.install from plugin config path
                          */
                         foreach (Configure::read('Installer.Connection') as $k => $v) {
-                            $content = str_replace('{default_' . $k . '}', $v, $content);
+                            $search = "{default_{$k}}";
+                            if (strpos($content, $search) !== false) {
+                                $content = str_replace($search, $v, $content);
+                            }
                         }
 
                         /**
